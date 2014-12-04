@@ -14,15 +14,37 @@ function initWebGL(canvas) {
   } 
 }  
 
+
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
+
+var renderFunction = function(time) {
+	gl.clearColor(Math.random(), Math.random(), Math.random(),1);
+	gl.clear(gl.COLOR_BUFFER_BIT);
+
+}
+
+function animloop(time){
+  requestAnimFrame(animloop);
+  renderFunction(time);
+};
+
 function createFullScreenCanvas() {
-	var c = jQuery(container);
-	var width = jQuery(window).width();
-	var height = jQuery(window).height();
+	var width = jQuery(document).width();
+	var height = jQuery(document).height();
 	var $canvas = jQuery("<CANVAS></CANVAS>");
 	$canvas.attr("id", "glCanvas");
 	$canvas.attr("width", width);
-	$canvas.attr("height", width);
+	$canvas.attr("height", height);
 	initWebGL($canvas.get(0));
+	jQuery(document.body).empty().append($canvas);
+	requestAnimFrame(animloop);
 }
 		
 
